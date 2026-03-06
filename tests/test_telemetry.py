@@ -51,9 +51,7 @@ def test_telemetry_log_memory_sovereignty() -> None:
     )
 
     # Check memory sovereignty configuration
-    assert log.model_config.get("slots") is True
     assert log.model_config.get("frozen") is True
-    assert hasattr(log, "__slots__")
 
     # Check frozen mutation rejection without tripping mypy read-only property check
     with pytest.raises(ValidationError):

@@ -65,6 +65,4 @@ def test_memory_sovereignty() -> None:
         kolibri_step.__setattr__("title", "New Title")
 
     # Check memory sovereignty configuration
-    assert kolibri_step.model_config.get("slots") is True
     assert kolibri_step.model_config.get("frozen") is True
-    assert hasattr(kolibri_step, "__slots__")

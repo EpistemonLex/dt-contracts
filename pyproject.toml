@@ -39,7 +39,6 @@ plugins = ["pydantic.mypy"]
 [[tool.mypy.overrides]]
 module = "dt_contracts.*"
 ignore_missing_imports = false
-disable_error_code = ["typeddict-unknown-key"]
 
 [tool.ruff]
 line-length = 110
