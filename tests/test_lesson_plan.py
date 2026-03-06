@@ -60,9 +60,9 @@ def test_memory_sovereignty() -> None:
         transcript="Test transcript",
     )
 
-    # Check frozen
+    # Check frozen mutation rejection without tripping mypy read-only property check
     with pytest.raises(ValidationError):
-        kolibri_step.title = "New Title"  # type: ignore[misc]
+        kolibri_step.__setattr__("title", "New Title")
 
     # Check memory sovereignty configuration
     assert kolibri_step.model_config.get("slots") is True

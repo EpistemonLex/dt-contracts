@@ -13,3 +13,10 @@ You are the **Sovereign Authority** for the Deepthought Educational OS. Your sch
 
 ## Next Step
 Once 'TelemetryLog' is live, notify the Orchestrator. The 'dt-backpack' and 'dt-sandboxes' instances are waiting for this contract to begin their synchronization logic.
+
+## Architectural Ratchet (Mandatory Compliance)
+We do not hide debt; we liquidate it. The following ratchets are enforced via 'bash fast.sh':
+- **No-NoQA Policy**: Use of '# noqa' or '# type: ignore' is strictly prohibited. If a tool reports an error, fix the underlying code or architectural violation.
+- **Zero-Any Vacuum**: Literal 'Any' is banned in production and test code. 
+- **Object Sovereignty**: Use of 'object' as a type is prohibited unless tagged with '# architectural: allowed-object (Justification)'.
+- **Verification**: 'bash fast.sh' will FAIL if any of these are detected.
