@@ -53,12 +53,17 @@ ignore = [
 
 [tool.ruff.lint.per-file-ignores]
 "tests/**" = ["S101", "ANN201", "D103", "PLR2004", "ANN001"]
+"reproduce_*.py" = ["T201", "D103", "ANN", "D101", "D107", "B018", "BLE001"]
+"check_mro_slots.py" = ["T201", "D101", "D103"]
 
 [tool.ruff.format]
 quote-style = "double"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+markers = [
+    "architecture: architectural compliance tests",
+]
 filterwarnings = ["error"]
 
 [tool.coverage.report]
@@ -67,3 +72,6 @@ show_missing = true
 
 [tool.uv]
 managed = true
+
+[tool.uv.sources]
+dt-testing = { workspace = true }

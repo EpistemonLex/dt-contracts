@@ -1,5 +1,6 @@
 """Tests for the Deepthought telemetry schemas."""
 
+
 import pytest
 from pydantic import ValidationError
 
@@ -31,13 +32,13 @@ def test_telemetry_log_with_details() -> None:
 
 def test_telemetry_log_rejects_malformed_action() -> None:
     """Verify that invalid action types raise a ValidationError."""
-    invalid_data: dict[str, str] = {
+    invalid_data = {
         "student_id": "stu-123",
         "action_type": "invalid_action_type",
         "timestamp": "2026-03-06T14:30:00Z",
     }
     with pytest.raises(ValidationError) as exc_info:
-        TelemetryLog(**invalid_data)
+        TelemetryLog(**invalid_data)  # type: ignore[arg-type] # architectural: allowed-object
 
     assert "Input should be" in str(exc_info.value)
 
