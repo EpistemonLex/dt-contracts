@@ -13,11 +13,22 @@ class SandboxType(StrEnum):
 
     KAPLAY = "kaplay"
     PHET = "phet"
+    MOLWORKBENCH = "molworkbench"
+    NETLOGO = "netlogo"
     SNAP = "snap"
+    MAKECODE = "makecode"
     SANDBOXELS = "sandboxels"
     BEEPBOX = "beepbox"
     TLDRAW = "tldraw"
+    PISKEL = "piskel"
     CAD = "cad"
+    STARBOARD = "starboard"
+    MATHIGON = "mathigon"
+    GEOGEBRA = "geogebra"
+    RENPY = "renpy"
+    CIRCUITJS = "circuitjs"
+    QJS = "qjs"
+    AUDIOMASS = "audiomass"
     MINETEST = "minetest"
 
 class TelemetryLevel(StrEnum):

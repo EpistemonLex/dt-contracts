@@ -1,8 +1,21 @@
 """The Tutoring Orchestration contracts for real-time AI teacher responses."""
 
-from pydantic import Field
+from pydantic import ConfigDict, Field
 
 from .base import DeepthoughtBaseModel
+
+
+class SocraticScript(DeepthoughtBaseModel):
+    """A pre-computed pedagogical blueprint for a specific topic (The Script)."""
+
+    model_config = ConfigDict(slots=True)
+
+    topic_id: str = Field(..., description="Kolibri ContentNode_ID")
+    concept_name: str
+    primary_analogy: str = Field(..., description="e.g. The Wonderland analogy")
+    key_points: list[str] = Field(default_factory=list)
+    suggested_questions: list[str] = Field(default_factory=list)
+    rag_context: str = Field(..., description="Ground truth transcript text")
 
 
 class TeacherAction(DeepthoughtBaseModel):

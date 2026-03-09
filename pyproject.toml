@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 name = "dt-contracts"
 version = "0.1.0"
 description = "Sovereign Pydantic V2 schemas with __slots__ for Deepthought Educational OS."
-requires-python = ">=3.14"
+requires-python = ">=3.12,<3.13"
 authors = [{name = "Epistemon", email = "charlesrobertsstudio@gmail.com"}]
 dependencies = [
     "pydantic>=2.10.0",

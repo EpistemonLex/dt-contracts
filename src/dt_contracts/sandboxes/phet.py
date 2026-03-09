@@ -1,24 +1,20 @@
-"""PhET Interactive Simulation contracts."""
+"""Contracts for PhET Interactive Simulations."""
 
 from pydantic import ConfigDict, Field
+from .base import DeepthoughtBaseModel
 
-from dt_contracts.base import DeepthoughtBaseModel
-
-
-class PhETVariable(DeepthoughtBaseModel):
-    """A single observable variable in a PhET simulation."""
-
+class PhetVariable(DeepthoughtBaseModel):
+    """A granular variable from a PhET simulation state."""
     model_config = ConfigDict(slots=True)
-
-    name: str = Field(..., description="e.g. 'gravity', 'mass', 'voltage'")
+    
+    name: str = Field(..., description="The internal name of the PhET property")
     value: float | str | bool
-    unit: str | None = None
+    units: str | None = None
 
-class PhETState(DeepthoughtBaseModel):
-    """The full state of a PhET HTML5 simulation."""
-
+class PhetState(DeepthoughtBaseModel):
+    """The high-fidelity state of a PhET simulation."""
     model_config = ConfigDict(slots=True)
-
-    sim_name: str = Field(..., description="Internal PhET ID (e.g. 'gravity-force-lab')")
-    variables: list[PhETVariable]
-    is_paused: bool = False
+    
+    sim_id: str = Field(..., description="The unique PhET simulation identifier")
+    variables: list[PhetVariable] = Field(default_factory=list)
+    timestamp: str
