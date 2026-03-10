@@ -18,27 +18,14 @@ def test_teacher_action_creation() -> None:
     assert action.confidence_score == 0.95
 
 
-def test_teacher_action_with_ui_trigger() -> None:
-    """Test creation with UI triggers and code hints."""
-    action = TeacherAction(
-        action_id="act-456",
-        response_text="Look at the wind tunnel visualization.",
-        ui_trigger="start_smoke_animation",
-        code_hint="Check your lift_coefficient variable assignment.",
-        confidence_score=0.88,
-    )
-    assert action.ui_trigger == "start_smoke_animation"
-    assert "lift_coefficient" in str(action.code_hint)
-
-
 def test_model_retry_creation() -> None:
     """Test creation of a ModelRetry feedback payload."""
     retry = ModelRetry(
-        error_message="Field 'action_id' is missing",
+        validation_error="Field 'action_id' is missing",
         malformed_output='{"response_text": "hello"}',
         fix_instruction="Please include the required 'action_id' UUID.",
     )
-    assert "missing" in retry.error_message
+    assert "missing" in retry.validation_error
     assert "UUID" in retry.fix_instruction
 
 

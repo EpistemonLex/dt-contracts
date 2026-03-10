@@ -1,9 +1,13 @@
 """The Telemetry schema for logging micro-actions and semantically dense summaries."""
 
+from __future__ import annotations
+
 from enum import StrEnum
 from typing import Any
 
-from pydantic import ConfigDict, Field
+from pydantic import Field
+
+from dt_contracts.sandboxes.base import SandboxType, TelemetryLevel
 
 from .base import DeepthoughtBaseModel
 
@@ -26,20 +30,25 @@ class LogEntryType(StrEnum):
     SYSTEM_ERROR = "system_error"
 
 
+class SandboxRawPayload(DeepthoughtBaseModel):
+    """Standardized payload for raw sandbox events in the ledger."""
+
+    sandbox_type: SandboxType
+    event_name: str
+    payload: dict[str, Any] = Field(default_factory=dict) # architectural: allowed-any (Engine Payload)
+    level: TelemetryLevel = TelemetryLevel.INFO
+
+
 class RawLogEntry(DeepthoughtBaseModel):
     """A single 'thin' event recorded in the local hot-table."""
 
-    model_config = ConfigDict(slots=True)
-
     timestamp: str
     entry_type: LogEntryType
-    payload: dict[str, Any] = Field(default_factory=dict)
+    payload: dict[str, Any] = Field(default_factory=dict) # architectural: allowed-any (Heterogeneous Payload)
 
 
 class CognitiveAssessment(DeepthoughtBaseModel):
     """AI enrichment explaining the student's logic and struggle."""
-
-    model_config = ConfigDict(slots=True)
 
     frustration_index: float = Field(0.0, ge=0.0, le=1.0)
     intervention_held: bool = False
@@ -49,8 +58,6 @@ class CognitiveAssessment(DeepthoughtBaseModel):
 class MasterySignal(DeepthoughtBaseModel):
     """Mapping of the interaction back to the Kolibri Topic Tree."""
 
-    model_config = ConfigDict(slots=True)
-
     kolibri_topic_id: str
     competency: CompetencyLevel = CompetencyLevel.NONE
     next_logical_unlock: str | None = None
@@ -59,16 +66,14 @@ class MasterySignal(DeepthoughtBaseModel):
 class SemanticallyDenseSummary(DeepthoughtBaseModel):
     """A 5-minute flight recorder snapshot of the student's learning arc."""
 
-    model_config = ConfigDict(slots=True)
-
     summary_id: str
     start_time: str
     end_time: str
-    
+
     # Enrichment
     assessment: CognitiveAssessment
     mastery: MasterySignal
-    
+
     # Compressed context (Optional: sample of crucial raw logs for human auditing)
     context_samples: list[RawLogEntry] = Field(default_factory=list)
 
@@ -89,6 +94,6 @@ class TelemetryLog(DeepthoughtBaseModel):
     student_id: str = Field(..., description="UUID of the student")
     action_type: ActionType
     timestamp: str = Field(..., description="ISO 8601 timestamp of the action")
-    details: dict[str, Any] | None = Field(
+    details: dict[str, Any] | None = Field( # architectural: allowed-any
         default=None, description="Structured payload details",
-    )
+    ) # architectural: allowed-any (Legacy Support)

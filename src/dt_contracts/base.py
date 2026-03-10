@@ -1,5 +1,7 @@
 """Base model configurations for the Deepthought contract ecosystem."""
 
+from __future__ import annotations
+
 from pydantic import BaseModel, ConfigDict
 
 
@@ -10,4 +12,5 @@ class DeepthoughtBaseModel(BaseModel):
         frozen=True,
         extra="forbid",
         validate_assignment=True,
+        slots=True,
     )

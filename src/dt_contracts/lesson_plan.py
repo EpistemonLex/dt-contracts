@@ -1,8 +1,12 @@
 """The Hybrid Lesson Plan contracts for offline AI orchestration."""
 
+from __future__ import annotations
+
 from enum import StrEnum
 
 from pydantic import Field
+
+from dt_contracts.sandboxes.base import SandboxType
 
 from .base import DeepthoughtBaseModel
 
@@ -16,16 +20,6 @@ class StepKind(StrEnum):
 
     KOLIBRI_CONSUMPTION = "kolibri_consumption"
     STEAM_SANDBOX = "steam_sandbox"
-
-
-class SandboxEngine(StrEnum):
-    """The STEAM client engine used for the sandbox."""
-
-    KAPLAY = "kaplay"
-    MINETEST = "minetest"
-    TURBOWARP = "turbowarp"
-    SONIC_PI = "sonic_pi"
-    TLDRAW = "tldraw"
 
 
 class KolibriStep(DeepthoughtBaseModel):
@@ -43,7 +37,7 @@ class SandboxStep(DeepthoughtBaseModel):
     """Step requiring active creation in a STEAM sandbox."""
 
     kind: StepKind = StepKind.STEAM_SANDBOX
-    engine: SandboxEngine
+    engine: SandboxType
     challenge_prompt: str = Field(..., description="The Socratic prompt for the student")
     initial_state: dict[str, JsonValue] | None = None
     validation_logic: str = Field(..., description="RestrictedPython or JSON logic for success")

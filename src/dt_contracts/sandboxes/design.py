@@ -1,14 +1,14 @@
 """Contracts for Design, Art, and Visual Thinking sandboxes."""
 
-from pydantic import ConfigDict, Field
+from __future__ import annotations
+
+from pydantic import Field
 
 from dt_contracts.base import DeepthoughtBaseModel
 
 
 class CanvasShape(DeepthoughtBaseModel):
     """A shape or sketch on a canvas."""
-
-    model_config = ConfigDict(slots=True)
 
     id: str
     type: str = Field(..., description="e.g. 'arrow', 'box', 'scribble'")
@@ -18,8 +18,6 @@ class CanvasShape(DeepthoughtBaseModel):
 
 class DesignState(DeepthoughtBaseModel):
     """The state of a visual thinking canvas (tldraw)."""
-
-    model_config = ConfigDict(slots=True)
 
     shapes: list[CanvasShape]
     active_tool: str

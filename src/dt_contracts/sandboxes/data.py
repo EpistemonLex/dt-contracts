@@ -1,26 +1,24 @@
 """Contracts for Data Science and Relational sandboxes."""
 
-from pydantic import ConfigDict, Field
+from __future__ import annotations
+
+from pydantic import Field
 
 from dt_contracts.base import DeepthoughtBaseModel
 
 
-class DataCell(DeepthoughtBaseModel):
-    """A single cell in a data grid."""
+class NotebookCell(DeepthoughtBaseModel):
+    """A single cell in a literate notebook (Starboard)."""
 
-    model_config = ConfigDict(slots=True)
+    cell_id: str
+    cell_type: str = Field(..., description="e.g. 'code', 'markdown'")
+    content: str
+    execution_count: int = 0
 
-    row: int
-    col: str
-    value: str | float | bool | None
-    formula: str | None = None
 
 class DataState(DeepthoughtBaseModel):
-    """The state of a relational/data sandbox (Grist/Quadratic)."""
+    """Snapshot of a data science environment."""
 
-    model_config = ConfigDict(slots=True)
-
-    active_table: str
-    modified_cells: list[DataCell] = Field(default_factory=list)
-    row_count: int
-    col_count: int
+    cells: list[NotebookCell]
+    active_dataset: str | None = None
+    variables: dict[str, str] = Field(default_factory=dict)

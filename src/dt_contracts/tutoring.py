@@ -1,48 +1,38 @@
 """The Tutoring Orchestration contracts for real-time AI teacher responses."""
 
-from pydantic import ConfigDict, Field
+from __future__ import annotations
+
+from pydantic import Field
 
 from .base import DeepthoughtBaseModel
 
 
 class SocraticScript(DeepthoughtBaseModel):
-    """A pre-computed pedagogical blueprint for a specific topic (The Script)."""
+    """A pre-computed pedagogical script from the 70B Core."""
 
-    model_config = ConfigDict(slots=True)
-
-    topic_id: str = Field(..., description="Kolibri ContentNode_ID")
+    topic_id: str
     concept_name: str
-    primary_analogy: str = Field(..., description="e.g. The Wonderland analogy")
+    primary_analogy: str
     key_points: list[str] = Field(default_factory=list)
     suggested_questions: list[str] = Field(default_factory=list)
-    rag_context: str = Field(..., description="Ground truth transcript text")
+    rag_context: str = Field(..., description="Targeted grounding text for the local 0.8B")
 
 
 class TeacherAction(DeepthoughtBaseModel):
-    """The primary response contract for the AI Tutor."""
+    """A structured response from the local AI Tutor."""
 
-    action_id: str = Field(..., description="A unique UUID for the tutoring event")
-    response_text: str = Field(
-        ..., description="The main spoken/displayed response to the student",
-    )
+    action_id: str
+    response_text: str = Field(..., description="The student-facing message")
     socratic_question: str | None = Field(
-        default=None, description="A targeted question to prompt student inquiry",
+        None, description="The pedagogical 'hook' to keep them thinking",
     )
-    code_hint: str | None = Field(
-        default=None, description="Specific debugging guidance for S.T.E.A.M. challenges",
-    )
-    ui_trigger: str | None = Field(
-        default=None, description="A specific frontend event identifier",
-    )
-    confidence_score: float = Field(
-        ..., description="The model's self-assessed confidence in the pedagogical response",
-    )
+    confidence_score: float = 1.0
 
 
 class ModelRetry(DeepthoughtBaseModel):
-    """Feedback payload for the self-healing AI validation loop."""
+    """Internal contract for correcting malformed local LLM output."""
 
-    error_message: str = Field(..., description="The Pydantic ValidationError text")
+    validation_error: str = Field(..., description="The Pydantic ValidationError text")
     malformed_output: str = Field(..., description="The raw string that failed validation")
     fix_instruction: str = Field(
         ..., description="Specific system instructions for correcting the output",

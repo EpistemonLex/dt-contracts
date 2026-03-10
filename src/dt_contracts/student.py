@@ -1,47 +1,42 @@
 """Contracts for Student Identity, Mastery, and Cognitive State."""
 
+from __future__ import annotations
+
 from enum import StrEnum
 
-from pydantic import ConfigDict, Field
+from pydantic import Field
 
 from .base import DeepthoughtBaseModel
 
 
 class MasteryLevel(StrEnum):
-    """The student's proficiency in a specific skill node."""
+    """The student's level of understanding for a specific concept."""
 
-    UNSEEN = "unseen"
-    STRUGGLING = "struggling"
-    FAMILIAR = "familiar"
-    PROFICIENT = "proficient"
-    MASTERED = "mastered"
+    NOVICE = "novice"
+    EXPLORER = "explorer"
+    ARCHITECT = "architect"
+    MASTER = "master"
+
 
 class SkillMastery(DeepthoughtBaseModel):
-    """The current proficiency level for a single knowledge node."""
+    """The student's mastery of a specific skill or topic."""
 
-    model_config = ConfigDict(slots=True)
-
-    node_id: str
+    topic_id: str
     level: MasteryLevel
-    confidence: float = Field(..., ge=0.0, le=1.0)
-    last_practiced: str | None = None
+    last_accessed: str
+    confidence_score: float = 0.0
+
 
 class CognitiveProfile(DeepthoughtBaseModel):
-    """A high-level model of the student's current learning state."""
+    """Current mental and emotional state of a learner."""
 
-    model_config = ConfigDict(slots=True)
+    attention_span: float = 1.0
+    frustration_level: float = 0.0
+    active_sandbox_id: str | None = None
 
-    student_id: str
-    focus_score: float = Field(0.5, description="1.0 = High focus, 0.0 = Distracted")
-    struggle_index: float = Field(0.0, description="1.0 = Significant friction, 0.0 = Flow")
-    preferred_avatar: str = "Sprocket"
-    mastered_nodes: list[str] = Field(default_factory=list)
-    recent_telemetry_summary: str | None = None
 
 class StudentProfile(DeepthoughtBaseModel):
-    """The authoritative identity and aggregate state of a learner."""
-
-    model_config = ConfigDict(slots=True)
+    """The authoritative state of a learner."""
 
     id: str
     name: str

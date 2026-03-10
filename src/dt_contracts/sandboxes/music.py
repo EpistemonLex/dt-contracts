@@ -1,25 +1,23 @@
 """Contracts for Music and Algorithmic Sound sandboxes."""
 
-from pydantic import ConfigDict, Field
+from __future__ import annotations
+
+from pydantic import Field
 
 from dt_contracts.base import DeepthoughtBaseModel
 
 
-class MusicalNote(DeepthoughtBaseModel):
-    """A single note or event in a sequence."""
+class MusicPattern(DeepthoughtBaseModel):
+    """A musical sequence (Strudel/BeepBox)."""
 
-    model_config = ConfigDict(slots=True)
+    id: str
+    notation: str = Field(..., description="e.g. TidalCycles or ABC notation")
+    tempo_bpm: float = 120.0
 
-    pitch: str  # e.g. 'C4'
-    duration: float
-    velocity: float = 0.8
 
-class MusicState(DeepthoughtBaseModel):
-    """The overall state of a music composition (BeepBox/Strudel)."""
+class AudioState(DeepthoughtBaseModel):
+    """State of an audio editing or synthesis session."""
 
-    model_config = ConfigDict(slots=True)
-
-    bpm: float
-    key: str
-    tracks_count: int
-    active_pattern: list[MusicalNote] = Field(default_factory=list)
+    active_tracks: int = 1
+    sample_rate: int = 44100
+    is_playing: bool = False

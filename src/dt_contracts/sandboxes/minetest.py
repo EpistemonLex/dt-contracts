@@ -1,6 +1,8 @@
 """Contracts for the Minetest Voxel Sandbox."""
 
-from pydantic import ConfigDict, Field
+from __future__ import annotations
+
+from pydantic import Field
 
 from dt_contracts.base import DeepthoughtBaseModel
 
@@ -8,24 +10,22 @@ from dt_contracts.base import DeepthoughtBaseModel
 class VoxelPosition(DeepthoughtBaseModel):
     """A 3D coordinate in the Minetest world."""
 
-    model_config = ConfigDict(slots=True)
     x: float
     y: float
     z: float
 
-class BlockEvent(DeepthoughtBaseModel):
-    """Telemetry for block placement or destruction."""
 
-    model_config = ConfigDict(slots=True)
+class MinetestEvent(DeepthoughtBaseModel):
+    """A world event captured by the Luanti mod."""
 
-    pos: VoxelPosition
-    block_name: str = Field(..., description="e.g. 'default:dirt', 'mesecons:wire'")
-    action: str = Field(..., description="'place' or 'dig'")
+    event_name: str = Field(..., description="e.g. 'node_placed', 'item_crafted'")
+    player_name: str
+    pos: VoxelPosition | None = None
+    node_type: str | None = None
+
 
 class MinetestState(DeepthoughtBaseModel):
     """Snapshot of the player and surrounding world."""
-
-    model_config = ConfigDict(slots=True)
 
     player_pos: VoxelPosition
     player_hp: int

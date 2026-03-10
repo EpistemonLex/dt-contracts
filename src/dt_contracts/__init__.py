@@ -1,5 +1,7 @@
 """Deepthought Educational OS middleware contracts and schemas."""
 
+from __future__ import annotations
+
 from .assessment import CognitiveMetric, PedagogicalContext
 from .sync import TelemetryPayload
 from .telemetry import ActionType, TelemetryLog

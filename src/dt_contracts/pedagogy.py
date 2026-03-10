@@ -1,50 +1,34 @@
 """Contracts for Pedagogical Content and Kolibri Mappings."""
 
+from __future__ import annotations
+
 from enum import StrEnum
 
-from pydantic import ConfigDict, Field
+from pydantic import Field
 
 from .base import DeepthoughtBaseModel
 
 
-class ContentKind(StrEnum):
-    """Types of educational content."""
+class KolibriLevel(StrEnum):
+    """Developmental tiers for Kolibri content."""
 
-    TOPIC = "topic"
-    VIDEO = "video"
-    EXERCISE = "exercise"
-    DOCUMENT = "document"
-    HTML5 = "html5"
+    ELEMENTARY = "elementary"
+    MIDDLE = "middle"
+    HIGH_SCHOOL = "high_school"
 
-class KnowledgeNode(DeepthoughtBaseModel):
-    """A single node in the pedagogical knowledge graph."""
 
-    model_config = ConfigDict(slots=True)
+class TopicMapping(DeepthoughtBaseModel):
+    """Mapping of a Kolibri topic to Ed-OS S.T.E.A.M. parameters."""
 
-    id: str = Field(..., description="The unique Kolibri ContentNode ID")
-    title: str
-    description: str | None = None
-    kind: ContentKind
-    channel_id: str
-    tags: list[str] = Field(default_factory=list)
-    metadata: dict[str, object] = Field(default_factory=dict) # architectural: allowed-object (Engine-specific meta)
+    kolibri_topic_id: str
+    target_tier: KolibriLevel
+    suggested_sandboxes: list[str] = Field(default_factory=list)
+    analogy_prompt: str = Field(..., description="The high-70B precomputed analogy for this topic")
 
-class TranscriptChunk(DeepthoughtBaseModel):
-    """A semantically cohesive block of text from a video transcript."""
 
-    model_config = ConfigDict(slots=True)
+class ContentRequirement(DeepthoughtBaseModel):
+    """Explicit requirement for completing a lesson."""
 
     node_id: str
-    content: str = Field(..., description="The raw transcript text")
-    start_time: float | None = None
-    end_time: float | None = None
-    vector_id: str | None = Field(None, description="The ID in the LanceDB vector store")
-
-class Prerequisite(DeepthoughtBaseModel):
-    """A directed edge in the knowledge graph representing dependency."""
-
-    model_config = ConfigDict(slots=True)
-
-    target_id: str = Field(..., description="The node that requires completion")
-    required_id: str = Field(..., description="The dependency node")
-    priority: int = 1  # 1 = hard prerequisite, 2 = recommended
+    min_score: float = 0.0
+    required_time_seconds: int = 0

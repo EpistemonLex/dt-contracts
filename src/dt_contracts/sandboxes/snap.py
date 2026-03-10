@@ -1,34 +1,32 @@
 """Snap! block-based coding contracts."""
 
-from pydantic import ConfigDict, Field
+from __future__ import annotations
+
+from pydantic import Field
 
 from dt_contracts.base import DeepthoughtBaseModel
 
 
 class SnapBlock(DeepthoughtBaseModel):
-    """Representation of a single coding block in Snap!."""
-
-    model_config = ConfigDict(slots=True)
+    """Representation of a single coding block."""
 
     id: str
-    selector: str = Field(..., description="The primitive name (e.g. 'forward', 'say')")
-    inputs: list[object] = Field(default_factory=list) # architectural: allowed-object (Nested block inputs)
+    selector: str
+    parameters: list[object] = Field(default_factory=list) # architectural: allowed-object (Block Params)
+
 
 class SnapSprite(DeepthoughtBaseModel):
-    """The state of a single sprite in the Snap! stage."""
-
-    model_config = ConfigDict(slots=True)
+    """The state of a sprite in Snap!."""
 
     name: str
-    x: float
-    y: float
-    direction: float
     scripts_count: int
+    costume_name: str
+    pos_x: float
+    pos_y: float
+
 
 class SnapState(DeepthoughtBaseModel):
-    """The overall state of the Snap! project."""
-
-    model_config = ConfigDict(slots=True)
+    """The full project state of a Snap! environment."""
 
     project_name: str
     sprites: list[SnapSprite]

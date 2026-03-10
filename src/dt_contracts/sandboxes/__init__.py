@@ -1,1 +1,1 @@
-"""Sandbox contract definitions."""
+"""STEAM Sandbox contracts and engine-specific state models."""

@@ -3,7 +3,8 @@
 import pytest
 from pydantic import ValidationError
 
-from dt_contracts.lesson_plan import HybridLessonPlan, KolibriStep, SandboxEngine, SandboxStep, StepKind
+from dt_contracts.lesson_plan import HybridLessonPlan, KolibriStep, SandboxStep, StepKind
+from dt_contracts.sandboxes.base import SandboxType
 
 
 def test_kolibri_step_creation() -> None:
@@ -21,12 +22,12 @@ def test_kolibri_step_creation() -> None:
 def test_sandbox_step_creation() -> None:
     """Test creation of a SandboxStep."""
     step = SandboxStep(
-        engine=SandboxEngine.KAPLAY,
+        engine=SandboxType.KAPLAY,
         challenge_prompt="Code something",
         validation_logic="true",
     )
     assert step.kind == StepKind.STEAM_SANDBOX
-    assert step.engine == SandboxEngine.KAPLAY
+    assert step.engine == SandboxType.KAPLAY
 
 def test_hybrid_lesson_plan_creation() -> None:
     """Test creation of a HybridLessonPlan."""
@@ -37,7 +38,7 @@ def test_hybrid_lesson_plan_creation() -> None:
         transcript="Transcript 1",
     )
     sandbox_step = SandboxStep(
-        engine=SandboxEngine.KAPLAY,
+        engine=SandboxType.KAPLAY,
         challenge_prompt="Challenge 1",
         validation_logic="logic 1",
     )

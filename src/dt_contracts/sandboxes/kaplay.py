@@ -1,46 +1,40 @@
 """Kaplay.js specific sandbox contracts."""
 
-from pydantic import ConfigDict, Field
+from __future__ import annotations
+
+from pydantic import Field
 
 from dt_contracts.base import DeepthoughtBaseModel
 
 
-class KaplayCodeSnapshot(DeepthoughtBaseModel):
-    """The current state of the student's JavaScript code."""
+class Vector2(DeepthoughtBaseModel):
+    """Simple 2D coordinate."""
 
-    model_config = ConfigDict(slots=True)
+    x: float
+    y: float
 
-    code: str = Field(..., description="The full source code text")
-    cursor_line: int | None = None
-    cursor_ch: int | None = None
 
-class KaplayCompilationError(DeepthoughtBaseModel):
-    """Details of a failed code execution."""
+class KaplaySprite(DeepthoughtBaseModel):
+    """A sprite instance in the game world."""
 
-    model_config = ConfigDict(slots=True)
+    id: str
+    tags: list[str] = Field(default_factory=list)
+    pos: Vector2
+    hp: int | None = None
 
-    message: str
-    line: int | None = None
-    column: int | None = None
-    stack: str | None = None
-
-class KaplayGameObject(DeepthoughtBaseModel):
-    """Simplified state of an in-game entity."""
-
-    model_config = ConfigDict(slots=True)
-
-    id: int
-    tags: list[str]
-    pos_x: float
-    pos_y: float
-    is_paused: bool = False
 
 class KaplayState(DeepthoughtBaseModel):
-    """Full snapshot of the Kaplay engine state."""
+    """The full state of a Kaplay.js game."""
 
-    model_config = ConfigDict(slots=True)
-
-    objects: list[KaplayGameObject]
-    gravity: float
-    is_game_over: bool = False
+    sprites: list[KaplaySprite]
     score: int = 0
+    time_elapsed: float = 0.0
+
+
+class KaplayEvent(DeepthoughtBaseModel):
+    """A high-frequency event from the Kaplay harvester."""
+
+    event_type: str = Field(..., description="e.g. 'collision', 'input', 'death'")
+    actor_id: str
+    target_id: str | None = None
+    payload: dict[str, object] = Field(default_factory=dict) # architectural: allowed-object (Engine Event)

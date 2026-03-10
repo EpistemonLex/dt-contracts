@@ -1,24 +1,23 @@
 """Contracts for Mathematical and Geometrical sandboxes."""
 
-from pydantic import ConfigDict, Field
+from __future__ import annotations
+
+from pydantic import Field
 
 from dt_contracts.base import DeepthoughtBaseModel
 
 
-class MathEntity(DeepthoughtBaseModel):
-    """A mathematical object (point, line, tile)."""
-
-    model_config = ConfigDict(slots=True)
+class MathEquation(DeepthoughtBaseModel):
+    """An equation or expression being manipulated (Mathigon)."""
 
     id: str
-    kind: str = Field(..., description="e.g. 'point', 'fraction_tile', 'polygon'")
-    definition: str = Field(..., description="Algebraic definition or value")
+    latex: str
+    is_solved: bool = False
 
-class MathState(DeepthoughtBaseModel):
-    """The state of a math playground (Mathigon/GeoGebra)."""
 
-    model_config = ConfigDict(slots=True)
+class GeometryState(DeepthoughtBaseModel):
+    """The state of a geometry simulation (GeoGebra)."""
 
-    entities: list[MathEntity]
-    last_equation: str | None = None
-    is_balanced: bool | None = None  # For algebra scales
+    points: list[dict[str, float]] = Field(default_factory=list)
+    lines: list[dict[str, str]] = Field(default_factory=list)
+    active_tool: str = "select"
